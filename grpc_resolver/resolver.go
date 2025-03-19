@@ -69,7 +69,7 @@ func (r *Resolver) resolve(options resolver.ResolveNowOptions) {
 	for _, s := range si {
 		addresses = append(addresses, resolver.Address{
 			Addr:       s.Address,
-			Attributes: attributes.New("weight", s.Weight),
+			Attributes: attributes.New("weight", s.Weight).WithValue("group", s.Group),
 		})
 	}
 

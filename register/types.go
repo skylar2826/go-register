@@ -17,6 +17,7 @@ type ServiceInstance struct {
 	Name    string
 	Address string
 	Weight  uint32
+	Group   string
 }
 
 type Event struct {

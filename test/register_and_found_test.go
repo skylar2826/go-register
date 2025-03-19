@@ -1,4 +1,4 @@
-package main
+package test
 
 //
 //func TestRegisterServer(t *testing.T) {

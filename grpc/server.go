@@ -1,4 +1,4 @@
-package main
+package grpc
 
 import (
 	"context"
@@ -39,6 +39,7 @@ func NewServer(name string, opts ...ServerOpt) *Server {
 
 type ServerConfig struct {
 	Weight uint32
+	Group  string
 }
 
 // Start 用户调用start时，即确认服务已启动成功可以注册
@@ -49,6 +50,7 @@ func (s *Server) Start(addr string, config *ServerConfig) error {
 			Name:    s.name,
 			Address: addr,
 			Weight:  config.Weight,
+			Group:   config.Group,
 		})
 		if err != nil {
 			cancel()
