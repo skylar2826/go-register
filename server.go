@@ -37,13 +37,18 @@ func NewServer(name string, opts ...ServerOpt) *Server {
 	return s
 }
 
+type ServerConfig struct {
+	Weight uint32
+}
+
 // Start 用户调用start时，即确认服务已启动成功可以注册
-func (s *Server) Start(addr string) error {
+func (s *Server) Start(addr string, config *ServerConfig) error {
 	if s.r != nil {
 		ctx, cancel := context.WithTimeout(context.Background(), s.timeout)
 		err := s.r.Register(ctx, register.ServiceInstance{
 			Name:    s.name,
 			Address: addr,
+			Weight:  config.Weight,
 		})
 		if err != nil {
 			cancel()

@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"google.golang.org/grpc"
-	gprc2 "micro/grpc"
+	grpc2 "micro/grpc"
 	"micro/proto/gen"
 	"net"
 	"testing"
@@ -12,7 +12,7 @@ import (
 )
 
 func TestServer(t *testing.T) {
-	userService := &gprc2.UserServiceServer{}
+	userService := &grpc2.UserServiceServer{}
 	server := grpc.NewServer()
 	gen.RegisterUserServiceServer(server, userService)
 

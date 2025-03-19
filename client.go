@@ -9,8 +9,9 @@ import (
 )
 
 type Client struct {
-	r        register.Register
-	insecure bool
+	r            register.Register
+	insecure     bool
+	balancerName string
 }
 
 type ClientOpt func(*Client)
@@ -24,6 +25,12 @@ func WithClientRegister(r register.Register) ClientOpt {
 func WithInSecure() ClientOpt {
 	return func(c *Client) {
 		c.insecure = true
+	}
+}
+
+func WithBalancer(name string) ClientOpt {
+	return func(c *Client) {
+		c.balancerName = name
 	}
 }
 
@@ -45,6 +52,9 @@ func (c *Client) Dial(serviceName string, timeout time.Duration) (*grpc.ClientCo
 	if c.r != nil {
 		rb := grpc_resolver.NewResolverBuilder(c.r, timeout)
 		opts = append(opts, grpc.WithResolvers(rb))
+	}
+	if c.balancerName != "" {
+		opts = append(opts, grpc.WithDefaultServiceConfig(`{"loadBalancingPolicy":"`+c.balancerName+`"}`))
 	}
 
 	return grpc.NewClient(fmt.Sprintf("passthrough:///%s", serviceName), opts...)

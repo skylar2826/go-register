@@ -2,6 +2,7 @@ package grpc_resolver
 
 import (
 	"context"
+	"google.golang.org/grpc/attributes"
 	"google.golang.org/grpc/resolver"
 	"micro/register"
 	"time"
@@ -63,10 +64,12 @@ func (r *Resolver) resolve(options resolver.ResolveNowOptions) {
 		return
 	}
 
-	addresses := make([]resolver.Address, len(si))
+	addresses := make([]resolver.Address, 0, len(si))
+
 	for _, s := range si {
 		addresses = append(addresses, resolver.Address{
-			Addr: s.Address,
+			Addr:       s.Address,
+			Attributes: attributes.New("weight", s.Weight),
 		})
 	}
 

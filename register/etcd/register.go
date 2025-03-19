@@ -49,7 +49,7 @@ func (r *Register) ListServices(ctx context.Context, serviceName string) ([]regi
 	if err != nil {
 		return nil, err
 	}
-	services := make([]register.ServiceInstance, 1)
+	services := make([]register.ServiceInstance, len(resp.Kvs))
 	for i, kv := range resp.Kvs {
 		err = json.Unmarshal(kv.Value, &services[i])
 		if err != nil {
