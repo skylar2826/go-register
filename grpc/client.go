@@ -12,6 +12,7 @@ type Client struct {
 	r            register.Register
 	insecure     bool
 	balancerName string
+	interceptor  grpc.UnaryClientInterceptor
 }
 
 type ClientOpt func(*Client)
@@ -31,6 +32,12 @@ func WithInSecure() ClientOpt {
 func WithBalancer(name string) ClientOpt {
 	return func(c *Client) {
 		c.balancerName = name
+	}
+}
+
+func WithInterceptor(interceptor grpc.UnaryClientInterceptor) ClientOpt {
+	return func(c *Client) {
+		c.interceptor = interceptor
 	}
 }
 
@@ -55,6 +62,9 @@ func (c *Client) Dial(serviceName string, timeout time.Duration) (*grpc.ClientCo
 	}
 	if c.balancerName != "" {
 		opts = append(opts, grpc.WithDefaultServiceConfig(`{"loadBalancingPolicy":"`+c.balancerName+`"}`))
+	}
+	if c.interceptor != nil {
+		opts = append(opts, grpc.WithUnaryInterceptor(c.interceptor))
 	}
 
 	return grpc.NewClient(fmt.Sprintf("passthrough:///%s", serviceName), opts...)

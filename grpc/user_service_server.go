@@ -11,10 +11,10 @@ type UserServiceServer struct {
 }
 
 func (s *UserServiceServer) GetById(ctx context.Context, req *gen.GetByIdReq) (*gen.GetByIdResp, error) {
-	fmt.Println(req)
+	fmt.Println("user_service调用: ", req)
 	return &gen.GetByIdResp{
 		User: &gen.User{
-			Id:   1,
+			Id:   req.Id,
 			Name: "zly",
 		},
 	}, nil
