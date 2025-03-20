@@ -25,9 +25,18 @@ func WithServerRegister(r register.Register, timeout time.Duration) ServerOpt {
 	}
 }
 
-func NewServer(name string, opts ...ServerOpt) *Server {
+type GrpcServerConfig struct {
+	Interceptor grpc.UnaryServerInterceptor
+}
+
+func NewServer(name string, config GrpcServerConfig, opts ...ServerOpt) *Server {
+	grpcServerOpts := make([]grpc.ServerOption, 0, 1)
+	if config.Interceptor != nil {
+		grpcServerOpts = append(grpcServerOpts, grpc.UnaryInterceptor(config.Interceptor))
+	}
+
 	s := &Server{
-		Server: grpc.NewServer(),
+		Server: grpc.NewServer(grpcServerOpts...),
 		name:   name,
 	}
 
