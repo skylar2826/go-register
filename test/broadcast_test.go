@@ -100,11 +100,15 @@ func TestBroadcastClient(t *testing.T) {
 	var broadcastRespList <-chan intecepter.Resp
 	broadcastRespList, ctx = intecepter.UseBroadcast(ctx)
 
-	// 接收全部
 	go func() {
-		for broadcastResp := range broadcastRespList {
-			fmt.Println("broadcast: ", broadcastResp.Data, broadcastResp.Err)
-		}
+		// 接收全部
+		//for broadcastResp := range broadcastRespList {
+		//	fmt.Println("broadcast: ", broadcastResp.Data, broadcastResp.Err)
+		//}
+
+		// 接收最快响应
+		resp := <-broadcastRespList
+		fmt.Println("broadcast", resp.Data, resp.Err)
 	}()
 
 	//for i := 0; i < 4; i++ {

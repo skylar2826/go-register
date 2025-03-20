@@ -58,17 +58,27 @@ func (b *BroadcastBuilder) Build() grpc.UnaryClientInterceptor {
 				}
 
 				// 处理所有响应
-				select {
-				case <-ctx.Done():
-					ch <- Resp{
-						Err: ctx.Err(),
-					}
-					return
+				//select {
+				//case <-ctx.Done():
+				//	ch <- Resp{
+				//		Err: ctx.Err(),
+				//	}
+				//	return
+				//
+				//case ch <- Resp{
+				//	Data: newReply,
+				//	Err:  er,
+				//}:
+				//}
 
+				// 处理第一个返回的响应
+				select {
 				case ch <- Resp{
 					Data: newReply,
 					Err:  er,
 				}:
+				default:
+
 				}
 
 				defer wg.Done()
